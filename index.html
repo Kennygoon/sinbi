@@ -38,6 +38,13 @@
   .btn.ghost:hover{background:#fff4e8}
   .more{background:linear-gradient(180deg,#fff4e0,#ffe9c7);border:2px dashed var(--orange);border-radius:16px;padding:16px;margin:14px 0;text-align:center}
   .more b{display:block;font-size:17px;margin-bottom:2px}
+  .oitem .h button{border:0;background:none;color:var(--red);font-weight:800;font-size:13px;cursor:pointer;padding:2px 0 2px 10px}
+  .olist{margin:14px 0 6px;display:grid;gap:8px}
+  .oitem{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px}
+  .oitem .h{display:flex;justify-content:space-between;font-weight:800;margin-bottom:2px}
+  .oitem .s{color:var(--muted)}
+  .gtotal{display:flex;justify-content:space-between;align-items:baseline;border-top:2px solid var(--ink);padding:10px 2px;margin:6px 0 14px;font-weight:800}
+  .gtotal b{font-size:22px;color:var(--red)}
   .more p{margin:0 0 12px;font-size:14px;color:var(--muted)}
 
   section.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px 18px;margin:0 0 16px}
@@ -204,44 +211,54 @@
 
         <div class="err" id="errBox" role="alert"></div>
         <div style="margin-top:18px">
-          <button class="btn block" type="submit" id="submitBtn">주문하기</button>
+          <button class="btn block" type="submit" id="submitBtn">주문 내역 확인하기</button>
         </div>
       </section>
     </form>
   </div>
 
-  <!-- 주문 완료 -->
+  <!-- 주문 내역 확인 · 완료 -->
   <div id="done">
     <section class="card">
       <div class="center">
-        <div class="okmark">✓</div>
-        <h2 style="font-size:22px">주문이 접수되었습니다</h2>
-        <p class="sub" style="margin-bottom:6px">아래 계좌로 입금해 주시면 확인 후 순서대로 배송합니다.</p>
-        <div class="orderno" id="doneNo"></div>
-        <div class="sub">주문번호</div>
+        <div class="okmark" id="doneMark">🧺</div>
+        <h2 style="font-size:22px" id="doneTitle"></h2>
+        <p class="sub" style="margin-bottom:6px" id="doneSub"></p>
       </div>
-      <div class="acct">
-        <div class="sub" style="margin:0">입금 계좌</div>
-        <div class="num" id="acctNum"></div>
-        <div style="font-weight:700" id="acctHolder"></div>
-        <div style="margin-top:10px;font-size:22px;font-weight:900;color:var(--red)" id="doneTotal"></div>
-        <button class="btn ghost" type="button" id="copyAcct" style="margin-top:12px">계좌번호 복사</button>
+
+      <div id="orderList" class="olist"></div>
+      <div class="gtotal"><span id="gCount"></span><b id="gSum"></b></div>
+
+      <div id="stepMore">
+        <div class="more">
+          <b>🍊 더 주문하실 건가요?</b>
+          <p>선물 등 받는 분이 다르면 이어서 추가 주문하세요. 입금은 모아서 한 번에 하실 수 있어요.</p>
+          <button class="btn block" type="button" id="again">+ 추가 주문하기</button>
+        </div>
+        <div class="err" id="errBox2" role="alert"></div>
+        <button class="btn block" type="button" id="finish" style="background:#2e7d32;box-shadow:0 6px 16px rgba(46,125,50,.28)">주문 완료 · 입금 안내 받기</button>
+        <p class="hint" style="text-align:center"><b>‘주문 완료’를 눌러야 주문이 접수됩니다.</b><br>누르면 합계 금액과 입금 계좌가 나옵니다.</p>
       </div>
-      <div class="more">
-        <b>🍊 더 주문하실 건가요?</b>
-        <p>다른 분께 보내는 선물 등 받는 분이 다르면 이어서 추가 주문할 수 있어요.</p>
-        <button class="btn block" type="button" id="again">+ 추가 주문하기</button>
+
+      <div id="stepPay" hidden>
+        <div class="acct">
+          <div class="sub" style="margin:0">입금 계좌</div>
+          <div class="num" id="acctNum"></div>
+          <div style="font-weight:700" id="acctHolder"></div>
+          <div style="margin-top:10px;font-size:22px;font-weight:900;color:var(--red)" id="doneTotal"></div>
+          <button class="btn ghost" type="button" id="copyAcct" style="margin-top:12px">계좌번호 복사</button>
+        </div>
+        <div class="notice">
+          <b>꼭 확인해 주세요</b>
+          <ul>
+            <li>위 <b>합계 금액을 한 번에</b> 입금해 주세요. (<span id="doneN"></span>건 합산)</li>
+            <li>입금자명이 <b id="doneDep"></b> 로 입금되어야 확인이 빠릅니다.</li>
+            <li>입금 확인 순서대로 월 · 수 · 금에 배송합니다.</li>
+            <li>문의는 문자로 <span id="contactPhone"></span> 로 주세요.</li>
+          </ul>
+        </div>
+        <div style="margin-top:16px"><button class="btn ghost block" type="button" id="newOrder">새로 주문하기 (별도 입금)</button></div>
       </div>
-      <dl class="kv" id="doneKv"></dl>
-      <div class="notice">
-        <b>꼭 확인해 주세요</b>
-        <ul>
-          <li>입금자명이 <b id="doneDep"></b> 로 입금되어야 확인이 빠릅니다.</li>
-          <li>입금 확인 순서대로 월 · 수 · 금에 배송합니다.</li>
-          <li>문의는 문자로 <span id="contactPhone"></span> 로 주세요.</li>
-        </ul>
-      </div>
-      <div style="margin-top:16px"><button class="btn block" type="button" id="again2">+ 추가 주문하기</button></div>
     </section>
   </div>
 </main>
@@ -432,7 +449,7 @@ function collect(){
     zip: $('zip').value.replace(/\D/g,''),
     address: $('address').value.trim(),
     addressDetail: $('addressDetail').value.trim(),
-    depositor: ($('depositor').value.trim() || $('name').value.trim()),
+    depositor: (CART.length ? CART[0].o.depositor : ($('depositor').value.trim() || $('name').value.trim())),
     memo: $('memo').value.trim(),
     consent: $('consent').checked,
     items: Object.assign({}, qty),
@@ -452,56 +469,104 @@ function check(o){
 function showErr(msg){ const b = $('errBox'); b.textContent = msg; b.classList.toggle('show', !!msg); }
 
 let submitting = false;
-$('orderForm').addEventListener('submit', async (e) => {
+let CART = [];            // 아직 접수 전인 주문 내역 (‘주문 완료’를 눌러야 서버로 전송)
+let PAID = null;          // 접수가 끝난 주문 목록
+const fmtPhone = (d) => { d = String(d || '').replace(/\D/g,''); return d.length === 11 ? d.replace(/(\d{3})(\d{4})(\d{4})/,'$1-$2-$3') : d.length === 10 ? d.replace(/(\d{3})(\d{3})(\d{4})/,'$1-$2-$3') : d; };
+
+$('orderForm').addEventListener('submit', (e) => {
   e.preventDefault();
-  if(submitting) return;
   const o = collect(); const errs = check(o);
   if(errs.length){
     showErr(errs.map(x => '· ' + x[1]).join('\n')); $('errBox').style.whiteSpace = 'pre-line';
     const t = $(errs[0][0]); t.scrollIntoView({behavior:'smooth', block:'center'}); if(t.focus) t.focus({preventScroll:true});
     return;
   }
+  // 내역에 이미 담은 수량까지 합쳐서 재고 확인 (최종 확인은 접수 시 서버에서)
+  const over = PRODUCTS.filter(p => typeof STOCK[p.key] === 'number' && (CART.reduce((s, x) => s + (x.o.items[p.key] || 0), 0) + (o.items[p.key] || 0)) > STOCK[p.key]);
+  if(over.length){ showErr('재고가 부족합니다: ' + over.map(p => p.name + ' 남은 수량 ' + STOCK[p.key] + '박스').join(', ') + ' (이미 담은 수량 포함)'); return; }
   showErr('');
-  submitting = true; $('submitBtn').disabled = true; $('submitBtn').textContent = '접수 중입니다…';
+  CART.push({ o, total: total() });
+  renderDone('cart');
+  $('formView').style.display = 'none'; $('done').style.display = 'block';
+  $('dock').classList.remove('show');
+  window.scrollTo({top: $('order').offsetTop - 10, behavior:'smooth'});
+});
+
+/* ---- 주문 내역 / 완료 화면 ---- */
+function renderDone(mode){                 // mode: 'cart'(접수 전) | 'pay'(접수 완료, 입금 안내)
+  const pay = mode === 'pay';
+  const list = pay ? PAID : CART;
+  const n = list.length, sum = list.reduce((s, x) => s + Number(x.total || 0), 0);
+  $('orderList').innerHTML = list.map((x, i) => {
+    const items = PRODUCTS.filter(p => x.o.items[p.key]).map(p => `${p.name} ${x.o.items[p.key]}박스`).join(' · ');
+    return `<div class="oitem"><div class="h"><span>${i + 1}. ${esc(x.o.recvName)} 님께</span><span>${won(x.total)}${pay ? '' : `<button type="button" data-del="${i}">삭제</button>`}</span></div>` +
+      `<div class="s">받는 분 연락처 ${esc(fmtPhone(x.o.recvPhone))}</div><div class="s">${esc(items)}</div>` +
+      `<div class="s">${esc((x.o.address + ' ' + x.o.addressDetail).trim())}</div>${pay ? `<div class="s">주문번호 ${esc(x.orderNo)}</div>` : ''}</div>`;
+  }).join('');
+  $('gCount').textContent = '총 ' + n + '건 합계';
+  $('gSum').textContent = won(sum);
+  $('stepMore').hidden = pay; $('stepPay').hidden = !pay;
+  $('doneMark').textContent = pay ? '✓' : '🧺';
+  $('doneMark').style.fontSize = pay ? '34px' : '30px';
+  $('doneTitle').textContent = pay ? '주문이 접수되었습니다' : '주문 내역을 확인해 주세요';
+  $('doneSub').textContent = pay ? '아래 합계 금액을 한 번에 입금해 주세요.' : '아직 접수 전입니다. 맞으면 ‘주문 완료’를 눌러 주세요. 잘못된 주문은 삭제할 수 있어요.';
+  if(pay){
+    $('acctNum').textContent = BANK.bank + ' ' + BANK.number;
+    $('acctHolder').textContent = '예금주 ' + BANK.holder;
+    $('doneTotal').textContent = '입금액 ' + won(sum);
+    $('doneN').textContent = n;
+    $('doneDep').textContent = list[0].o.depositor;
+    $('contactPhone').textContent = CONTACT_PHONE;
+  }
+}
+$('orderList').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-del]'); if(!b || !CART.length || !$('stepPay').hidden) return;
+  const i = Number(b.dataset.del);
+  if(!confirm((i + 1) + '번 주문(' + CART[i].o.recvName + ' 님께)을 삭제할까요?')) return;
+  CART.splice(i, 1);
+  if(!CART.length){ unlockDepositor(); toForm(); } else renderDone('cart');
+});
+function unlockDepositor(){ $('depositor').readOnly = false; $('depositor').style.background = ''; }
+function toForm(){
+  PRODUCTS.forEach(p => qty[p.key] = 0); syncProducts();
+  $('consent').checked = false; $('memo').value = '';
+  if(CART.length){ $('depositor').value = CART[0].o.depositor; $('depositor').readOnly = true; $('depositor').style.background = '#f3eee3'; }
+  $('done').style.display = 'none'; $('formView').style.display = 'block';
+  $('sec-items').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+/* ---- 주문 완료: 이때 한꺼번에 서버로 접수 ---- */
+$('finish').addEventListener('click', async () => {
+  if(submitting || !CART.length) return;
+  const eb = $('errBox2'); eb.classList.remove('show');
+  const fb = $('finish'); const label = fb.textContent;
+  submitting = true; fb.disabled = true; fb.textContent = '접수 중입니다…';
   try{
     let res;
     if(!API_URL){
       await new Promise(r => setTimeout(r, 500));
-      res = { ok:true, orderNo:'TEST-0001', total: total() };
+      res = { ok:true, orders: CART.map((x, i) => ({ orderNo:'TEST-000' + (i + 1), total: x.total })) };
     } else {
       const ctl = new AbortController(); const timer = setTimeout(() => ctl.abort(), 30000);
-      const r = await fetch(API_URL, { method:'POST', body: JSON.stringify(o), signal: ctl.signal });
+      const r = await fetch(API_URL, { method:'POST', body: JSON.stringify({ orders: CART.map(x => x.o) }), signal: ctl.signal });
       clearTimeout(timer);
       res = await r.json();
     }
-    if(res.stock){ STOCK = res.stock; }
-    if(!res.ok){ if(res.stock) applyStock(); const se = new Error(res.error || '주문 접수에 실패했습니다.'); se.server = true; throw se; }
-    showDone(o, res);
-    applyStock();
+    if(res.stock){ STOCK = res.stock; applyStock(); }
+    if(!res.ok){ const se = new Error(res.error || '주문 접수에 실패했습니다.'); se.server = true; throw se; }
+    PAID = CART.map((x, i) => Object.assign({}, x, { orderNo: res.orders[i].orderNo, total: res.orders[i].total }));
+    CART = [];
+    renderDone('pay');
+    window.scrollTo({top: $('order').offsetTop - 10, behavior:'smooth'});
   }catch(err){
     const msg = (err && err.name === 'AbortError') ? '응답이 지연되고 있습니다.' : (err && err.message) || '';
-    if(err && err.server){ showErr(msg); return; }
-    showErr((msg ? msg + ' ' : '') + '다시 시도해도 안 되면 문자주문 ' + CONTACT_PHONE + ' 로 알려 주세요. (같은 주문이 중복 접수되지 않도록 처리됩니다)');
+    eb.textContent = err && err.server ? msg : ((msg ? msg + ' ' : '') + '잠시 후 ‘주문 완료’를 다시 눌러 주세요. 안 되면 문자주문 ' + CONTACT_PHONE + ' 로 알려 주세요. (같은 주문이 중복 접수되지 않도록 처리됩니다)');
+    eb.classList.add('show');
   }finally{
-    submitting = false; $('submitBtn').textContent = '주문하기';
-    $('submitBtn').disabled = PRODUCTS.every(p => typeof STOCK[p.key] === 'number' && STOCK[p.key] <= 0);
+    submitting = false; fb.disabled = false; fb.textContent = label;
   }
 });
 
-/* ---- 완료 화면 ---- */
-function showDone(o, res){
-  $('doneNo').textContent = res.orderNo;
-  $('acctNum').textContent = BANK.bank + ' ' + BANK.number;
-  $('acctHolder').textContent = '예금주 ' + BANK.holder;
-  $('doneTotal').textContent = '입금액 ' + won(res.total);
-  $('doneDep').textContent = o.depositor;
-  $('contactPhone').textContent = CONTACT_PHONE;
-  const lines = PRODUCTS.filter(p => o.items[p.key]).map(p => `<dt>${p.name}</dt><dd>${o.items[p.key]}박스</dd>`).join('');
-  $('doneKv').innerHTML = lines + `<dt>받는 분</dt><dd>${esc(o.name)}</dd><dt>배송지</dt><dd>${esc(o.address)} ${esc(o.addressDetail)}</dd>`;
-  $('formView').style.display = 'none'; $('done').style.display = 'block';
-  $('dock').classList.remove('show');
-  window.scrollTo({top: $('order').offsetTop - 10, behavior:'smooth'});
-}
 const esc = (s) => String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 $('acctNum0').textContent = BANK.bank + ' ' + BANK.number;
 $('acctHolder0').textContent = '예금주 ' + BANK.holder;
@@ -517,14 +582,8 @@ $('copyAcct').addEventListener('click', async () => {
   catch(e){ $('copyAcct').textContent = '직접 길게 눌러 복사해 주세요'; }
   setTimeout(() => $('copyAcct').textContent = '계좌번호 복사', 2500);
 });
-const again = () => {
-  PRODUCTS.forEach(p => qty[p.key] = 0); syncProducts();
-  $('consent').checked = false; $('memo').value = '';
-  $('done').style.display = 'none'; $('formView').style.display = 'block';
-  $('sec-items').scrollIntoView({behavior:'smooth', block:'start'});
-};
-$('again').addEventListener('click', again);
-$('again2').addEventListener('click', again);
+$('again').addEventListener('click', toForm);
+$('newOrder').addEventListener('click', () => { CART = []; PAID = null; unlockDepositor(); toForm(); });
 
 /* ---- 주문 버튼 · 하단 고정 바 ---- */
 function goOrder(){ $('sec-items').scrollIntoView({behavior:'smooth', block:'start'}); }
