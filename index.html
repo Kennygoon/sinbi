@@ -162,6 +162,12 @@
       <section class="card" id="sec-pay">
         <h2>3. 입금 안내</h2>
         <p class="sub">주문 후 아래 계좌로 입금해 주세요. 입금 확인 순서대로 배송합니다.</p>
+        <div class="acct" style="margin:10px 0 14px">
+          <div class="sub" style="margin:0">입금 계좌</div>
+          <div class="num" id="acctNum0"></div>
+          <div style="font-weight:700" id="acctHolder0"></div>
+          <button class="btn ghost" type="button" id="copyAcct0" style="margin-top:10px">계좌번호 복사</button>
+        </div>
         <label class="f" for="depositor" style="margin-top:0">입금자명 <span class="req">*</span></label>
         <input class="in" id="depositor" name="depositor" type="text" maxlength="30" placeholder="실제 입금하실 분 이름">
         <p class="hint">입금자명이 주문자와 다르면 꼭 적어 주세요. 입금 확인에 사용됩니다.</p>
@@ -462,6 +468,14 @@ function showDone(o, res){
   window.scrollTo({top: $('order').offsetTop - 10, behavior:'smooth'});
 }
 const esc = (s) => String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+$('acctNum0').textContent = BANK.bank + ' ' + BANK.number;
+$('acctHolder0').textContent = '예금주 ' + BANK.holder;
+$('copyAcct0').addEventListener('click', async () => {
+  const b = $('copyAcct0');
+  try{ await navigator.clipboard.writeText(BANK.number.replace(/-/g,'')); b.textContent = '복사되었습니다 ✓'; }
+  catch(e){ b.textContent = '직접 길게 눌러 복사해 주세요'; }
+  setTimeout(() => b.textContent = '계좌번호 복사', 2500);
+});
 $('copyAcct').addEventListener('click', async () => {
   const text = BANK.number.replace(/-/g,'');
   try{ await navigator.clipboard.writeText(text); $('copyAcct').textContent = '복사되었습니다 ✓'; }
