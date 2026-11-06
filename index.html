@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>귀농 후 첫 수확 산지직송 단감 주문</title>
+<meta name="description" content="노령산맥 산지직송 단감. 특품 5kg, 상품 10kg, 보통 10kg 주문 · 입금 순서대로 배송">
+<meta property="og:title" content="귀농 후 첫 수확 산지직송 단감">
+<meta property="og:description" content="노령산맥의 맑은 바람과 큰 일교차로 키운 단감, 온라인 주문">
+<meta property="og:image" content="hero.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#fbf4e6; --card:#fffdf8; --line:#ecdcc0; --ink:#3a2a1c; --muted:#7a6650;
+    --orange:#e5701a; --orange-d:#c85a0b; --red:#b3261e; --ok:#2e7d32;
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans KR',system-ui,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;line-height:1.55;-webkit-text-size-adjust:100%}
+  img{max-width:100%;display:block}
+  button,input,textarea{font:inherit;color:inherit}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  .demo{background:#2b2b2b;color:#ffd9a8;text-align:center;font-size:13px;padding:8px 12px}
+  .hero{background:#f6ecd6}
+  .hero img{width:100%;height:auto;margin:0 auto;max-width:1100px}
+  .hero-cta{display:flex;justify-content:center;padding:18px 16px 26px;background:linear-gradient(#f6ecd6,var(--bg))}
+
+  .btn{appearance:none;border:0;border-radius:14px;background:var(--orange);color:#fff;font-weight:900;font-size:19px;min-height:56px;padding:0 28px;cursor:pointer;box-shadow:0 6px 16px rgba(229,112,26,.32);transition:transform .08s,background .15s}
+  .btn:hover{background:var(--orange-d)}
+  .btn:active{transform:translateY(1px)}
+  .btn[disabled]{background:#c9b9a0;box-shadow:none;cursor:not-allowed}
+  .btn.block{width:100%}
+  .btn.ghost{background:#fff;color:var(--orange-d);border:2px solid var(--orange);box-shadow:none;font-size:16px;min-height:48px;padding:0 18px}
+  .btn.ghost:hover{background:#fff4e8}
+
+  section.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px 18px;margin:0 0 16px}
+  h2{margin:0 0 4px;font-size:20px;font-weight:900}
+  .sub{margin:0 0 14px;color:var(--muted);font-size:14px}
+
+  .prod{display:grid;grid-template-columns:1fr auto;gap:10px 12px;align-items:center;border:1.5px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px;background:#fff}
+  .prod.on{border-color:var(--orange);background:#fff8ef}
+  .prod .name{font-weight:900;font-size:17px}
+  .prod .name small{display:block;font-weight:500;color:var(--muted);font-size:13px;margin-top:2px}
+  .tag{display:inline-block;font-size:12px;font-weight:700;color:var(--orange-d);background:#ffeacf;border-radius:999px;padding:1px 8px;margin-left:6px;vertical-align:1px}
+  .price{font-weight:900;color:var(--red);font-size:16px}
+  .price small{display:block;font-weight:500;color:var(--muted);font-size:12.5px}
+  .left{font-size:13px;font-weight:700;color:var(--orange-d);margin-top:4px;min-height:1px}
+  .left.low{color:var(--red)}
+  .prod.soldout{opacity:.55;background:#f3ede0}
+  .prod.soldout .left{color:#6b5a45}
+  .soldout-banner{display:none;margin:0 0 14px;background:#fdecea;border:1px solid #f3b8b3;color:#8c1d18;border-radius:12px;padding:12px 14px;font-weight:700;font-size:14px}
+  .soldout-banner.show{display:block}
+  .qty{display:flex;align-items:center;gap:0;border:1.5px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+  .qty button{width:44px;height:44px;border:0;background:#fbf4e6;font-size:22px;font-weight:700;cursor:pointer}
+  .qty button:active{background:#f1e3c8}
+  .qty input{width:46px;height:44px;border:0;text-align:center;font-weight:900;font-size:17px;-moz-appearance:textfield;background:#fff}
+  .qty input::-webkit-outer-spin-button,.qty input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+
+  .total{display:flex;justify-content:space-between;align-items:baseline;border-top:2px dashed var(--line);padding-top:14px;margin-top:6px}
+  .total b{font-size:26px;color:var(--red);font-weight:900}
+
+  label.f{display:block;font-weight:700;font-size:14px;margin:14px 0 6px}
+  label.f .req{color:var(--red)}
+  .in{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:0 14px;min-height:50px;background:#fff;font-size:16px}
+  textarea.in{padding:12px 14px;min-height:78px;resize:vertical}
+  .in:focus{outline:3px solid #ffd3a8;border-color:var(--orange)}
+  .in[readonly]{background:#faf5ea}
+  .row{display:grid;grid-template-columns:1fr auto;gap:8px}
+  .hint{font-size:12.5px;color:var(--muted);margin-top:6px}
+
+  .notice{background:#fff4e0;border:1px solid #f1d6a6;border-radius:14px;padding:14px 16px;font-size:14px}
+  .notice ul{margin:6px 0 0;padding-left:18px}
+  .notice li{margin:3px 0}
+
+  .consent{margin-top:16px;border:1px solid var(--line);border-radius:12px;background:#fff;padding:12px 14px;font-size:13px;color:var(--muted)}
+  .consent summary{cursor:pointer;font-weight:700;color:var(--ink)}
+  .chk{display:flex;gap:10px;align-items:flex-start;margin-top:12px;font-weight:700;font-size:15px}
+  .chk input{width:22px;height:22px;margin-top:2px;accent-color:var(--orange)}
+
+  .err{display:none;margin:14px 0 0;background:#fdecea;border:1px solid #f3b8b3;color:#8c1d18;border-radius:12px;padding:12px 14px;font-size:14px;font-weight:500}
+  .err.show{display:block}
+
+  /* 주소 검색 레이어 */
+  .modal{position:fixed;inset:0;background:rgba(30,20,10,.55);display:none;align-items:center;justify-content:center;z-index:50;padding:12px}
+  .modal.show{display:flex}
+  .modal .box{background:#fff;border-radius:16px;width:100%;max-width:520px;overflow:hidden;display:flex;flex-direction:column;max-height:90vh}
+  .modal .bar{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid #eee;font-weight:900}
+  .modal .bar button{border:0;background:none;font-size:15px;font-weight:700;color:var(--muted);cursor:pointer;min-height:40px;padding:0 8px}
+  #postcodeBox{width:100%;height:min(520px,70vh)}
+
+  /* 하단 고정 주문 바 */
+  .dock{position:fixed;left:0;right:0;bottom:0;background:rgba(255,253,248,.96);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom));display:flex;gap:12px;align-items:center;justify-content:center;transform:translateY(110%);transition:transform .2s;z-index:20;backdrop-filter:blur(6px)}
+  .dock.show{transform:none}
+  .dock .sum{font-weight:900;color:var(--red);font-size:17px;white-space:nowrap}
+  .dock .btn{min-height:50px;font-size:17px;flex:1;max-width:320px}
+
+  /* 완료 화면 */
+  #done{display:none}
+  .okmark{width:64px;height:64px;border-radius:50%;background:#e8f5e9;color:var(--ok);display:flex;align-items:center;justify-content:center;font-size:34px;margin:6px auto 10px}
+  .center{text-align:center}
+  .orderno{font-size:28px;font-weight:900;letter-spacing:.02em}
+  .acct{background:#fff;border:2px solid var(--orange);border-radius:14px;padding:16px;margin:14px 0;text-align:center}
+  .acct .num{font-size:clamp(17px,5.2vw,24px);font-weight:900;margin:4px 0;white-space:nowrap}
+  dl.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:14px 0;font-size:15px}
+  dl.kv dt{color:var(--muted)} dl.kv dd{margin:0;font-weight:700;text-align:right}
+
+  footer{padding:26px 16px 120px;color:var(--muted);font-size:12.5px;text-align:center}
+  footer p{margin:3px 0}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+
+<div class="demo" id="demoBanner" hidden>미리보기 모드 · 주문 서버가 연결되지 않아 입력한 내용이 저장되지 않습니다</div>
+
+<header class="hero">
+  <img src="hero.jpg" width="1280" height="720" alt="귀농 후 첫 수확 산지직송 단감. 특품 5kg 38,000원, 상품 10kg 34,000원, 보통 10kg 24,000원(택배비 포함). 문자주문 010-4328-3002">
+</header>
+<div class="hero-cta">
+  <button class="btn" type="button" id="heroOrder">주문하기</button>
+</div>
+
+<main class="wrap" id="order">
+
+  <div id="formView">
+    <form id="orderForm" novalidate autocomplete="on">
+
+      <section class="card" id="sec-items">
+        <h2>1. 상품 선택</h2>
+        <p class="sub">수량을 눌러 담아 주세요. 가격에 택배비가 포함되어 있으며, 도서산간 지역도 추가 비용이 없습니다.</p>
+        <div class="soldout-banner" id="soldoutBanner">준비한 수량이 모두 소진되어 주문을 마감했습니다. 문의는 문자로 부탁드립니다.</div>
+        <div id="prodList"></div>
+        <div class="total"><span>결제 금액</span><b id="totalText">0원</b></div>
+      </section>
+
+      <section class="card" id="sec-info">
+        <h2>2. 받으실 분 정보</h2>
+
+        <label class="f" for="name">이름 <span class="req">*</span></label>
+        <input class="in" id="name" name="name" type="text" autocomplete="name" maxlength="30" placeholder="받으시는 분 성함" required>
+
+        <label class="f" for="phone">휴대전화 <span class="req">*</span></label>
+        <input class="in" id="phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" maxlength="13" placeholder="010-0000-0000" required>
+
+        <label class="f" for="zip">주소 <span class="req">*</span></label>
+        <div class="row">
+          <input class="in" id="zip" name="zip" type="text" readonly placeholder="우편번호">
+          <button class="btn ghost" type="button" id="searchAddr">주소 검색</button>
+        </div>
+        <input class="in" id="address" name="address" type="text" readonly placeholder="도로명 주소 (검색 후 자동 입력)" style="margin-top:8px">
+        <input class="in" id="addressDetail" name="addressDetail" type="text" maxlength="100" autocomplete="address-line2" placeholder="상세주소 (동·호수 등)" style="margin-top:8px">
+        <p class="hint" id="addrHint">‘주소 검색’을 누르면 도로명·지번·건물명으로 찾을 수 있습니다.</p>
+
+        <label class="f" for="memo">배송 요청사항 (선택)</label>
+        <textarea class="in" id="memo" name="memo" maxlength="200" placeholder="예) 문 앞에 놓아주세요 / 경비실에 맡겨주세요"></textarea>
+      </section>
+
+      <section class="card" id="sec-pay">
+        <h2>3. 입금 안내</h2>
+        <p class="sub">주문 후 아래 계좌로 입금해 주세요. 입금 확인 순서대로 배송합니다.</p>
+        <label class="f" for="depositor" style="margin-top:0">입금자명 <span class="req">*</span></label>
+        <input class="in" id="depositor" name="depositor" type="text" maxlength="30" placeholder="실제 입금하실 분 이름">
+        <p class="hint">입금자명이 주문자와 다르면 꼭 적어 주세요. 입금 확인에 사용됩니다.</p>
+        <div class="notice" style="margin-top:14px">
+          <b>배송 안내</b>
+          <ul>
+            <li>감 수확 다음 날, 입금 순서대로 배송합니다.</li>
+            <li>배송일: 월 · 수 · 금 (필요 시 수시 배송)</li>
+            <li>신비가 모든 박스를 직접 확인 후 포장합니다.</li>
+          </ul>
+        </div>
+
+        <details class="consent">
+          <summary>개인정보 수집·이용 안내 (펼쳐서 보기)</summary>
+          <p style="margin:8px 0 0">· 수집 항목: 이름, 휴대전화, 주소, 입금자명, 배송 요청사항<br>
+          · 이용 목적: 주문 접수, 입금 확인, 상품 배송 및 문의 응대<br>
+          · 보유 기간: 목적 달성 후 관련 법령에서 정한 기간 동안 보관하고 파기합니다.<br>
+          · 동의를 거부할 수 있으나, 거부 시 주문이 불가능합니다.</p>
+        </details>
+        <label class="chk"><input type="checkbox" id="consent"> 개인정보 수집·이용에 동의합니다 <span class="req" style="color:var(--red)">(필수)</span></label>
+
+        <div class="err" id="errBox" role="alert"></div>
+        <div style="margin-top:18px">
+          <button class="btn block" type="submit" id="submitBtn">주문하기</button>
+        </div>
+      </section>
+    </form>
+  </div>
+
+  <!-- 주문 완료 -->
+  <div id="done">
+    <section class="card">
+      <div class="center">
+        <div class="okmark">✓</div>
+        <h2 style="font-size:22px">주문이 접수되었습니다</h2>
+        <p class="sub" style="margin-bottom:6px">아래 계좌로 입금해 주시면 확인 후 순서대로 배송합니다.</p>
+        <div class="orderno" id="doneNo"></div>
+        <div class="sub">주문번호</div>
+      </div>
+      <div class="acct">
+        <div class="sub" style="margin:0">입금 계좌</div>
+        <div class="num" id="acctNum"></div>
+        <div style="font-weight:700" id="acctHolder"></div>
+        <div style="margin-top:10px;font-size:22px;font-weight:900;color:var(--red)" id="doneTotal"></div>
+        <button class="btn ghost" type="button" id="copyAcct" style="margin-top:12px">계좌번호 복사</button>
+      </div>
+      <dl class="kv" id="doneKv"></dl>
+      <div class="notice">
+        <b>꼭 확인해 주세요</b>
+        <ul>
+          <li>입금자명이 <b id="doneDep"></b> 로 입금되어야 확인이 빠릅니다.</li>
+          <li>입금 확인 순서대로 월 · 수 · 금에 배송합니다.</li>
+          <li>문의는 문자로 <span id="contactPhone"></span> 로 주세요.</li>
+        </ul>
+      </div>
+      <div style="margin-top:16px"><button class="btn ghost block" type="button" id="again">추가 주문하기</button></div>
+    </section>
+  </div>
+</main>
+
+<footer id="footer"></footer>
+
+<!-- 하단 고정 바 -->
+<div class="dock" id="dock" aria-hidden="true">
+  <span class="sum" id="dockSum">0원</span>
+  <button class="btn" type="button" id="dockBtn">주문하기</button>
+</div>
+
+<!-- 주소 검색 레이어 -->
+<div class="modal" id="addrModal" role="dialog" aria-modal="true" aria-label="주소 검색">
+  <div class="box">
+    <div class="bar"><span>주소 검색</span><button type="button" id="closeAddr">닫기 ✕</button></div>
+    <div id="postcodeBox"></div>
+  </div>
+</div>
+
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+/* =====================  설정 (여기만 고치면 됩니다)  ===================== */
+// Apps Script 배포 후 받은 웹 앱 URL 을 따옴표 안에 붙여넣으세요. 비워 두면 '미리보기 모드'로 동작합니다.
+const API_URL = '';
+
+// 상품·가격은 Code.gs 의 PRODUCTS 와 반드시 같아야 합니다 (서버가 이 가격으로 다시 계산합니다).
+const PRODUCTS = [
+  { key:'special', name:'특품 5kg', tag:'선물용', desc:'특과 16~18과 · 팬캡 포장', price:38000, ship:'택배비 4,000원 포함' },
+  { key:'grade',   name:'상품 10kg', tag:'', desc:'중과 58~60과 · 3단 포장',  price:34000, ship:'택배비 5,000원 포함' },
+  { key:'normal',  name:'보통 10kg', tag:'', desc:'소과 · 막 포장',            price:24000, ship:'택배비 5,000원 포함' },
+];
+const BANK = { bank:'농협', number:'352-2393-0322-23', holder:'김상호' };
+const CONTACT_PHONE = '010-4328-3002';
+// 통신판매업 신고 후 채우면 하단에 자동 표시됩니다. 비워 두면 표시하지 않습니다.
+const BUSINESS = { name:'', owner:'', regNo:'', mailOrderNo:'', address:'' };
+/* ====================================================================== */
+
+const $ = (id) => document.getElementById(id);
+const won = (n) => n.toLocaleString('ko-KR') + '원';
+const qty = {}; PRODUCTS.forEach(p => qty[p.key] = 0);
+
+/* ---- 상품 카드 ---- */
+function renderProducts(){
+  $('prodList').innerHTML = PRODUCTS.map(p => `
+    <div class="prod" data-key="${p.key}">
+      <div>
+        <div class="name">${p.name}${p.tag ? `<span class="tag">${p.tag}</span>` : ''}<small>${p.desc}</small></div>
+        <div class="price">${won(p.price)}<small>${p.ship}</small></div>
+        <div class="left" data-left></div>
+      </div>
+      <div class="qty" role="group" aria-label="${p.name} 수량">
+        <button type="button" data-act="minus" aria-label="${p.name} 하나 빼기">−</button>
+        <input type="number" inputmode="numeric" min="0" max="20" value="0" aria-label="${p.name} 수량">
+        <button type="button" data-act="plus" aria-label="${p.name} 하나 더하기">＋</button>
+      </div>
+    </div>`).join('');
+  $('prodList').addEventListener('click', (e) => {
+    const b = e.target.closest('button[data-act]'); if(!b) return;
+    const key = b.closest('.prod').dataset.key;
+    setQty(key, qty[key] + (b.dataset.act === 'plus' ? 1 : -1));
+  });
+  $('prodList').addEventListener('input', (e) => {
+    if(e.target.tagName !== 'INPUT') return;
+    setQty(e.target.closest('.prod').dataset.key, parseInt(e.target.value, 10), true);
+  });
+  $('prodList').addEventListener('change', syncProducts);
+}
+/* ---- 재고: 서버가 알려준 남은 수량 (null/없음 = 제한 없음) ---- */
+const MAX_QTY = 20;
+let STOCK = {};
+const limitOf = (key) => (typeof STOCK[key] === 'number') ? Math.min(MAX_QTY, STOCK[key]) : MAX_QTY;
+function applyStock(){
+  let allOut = true;
+  document.querySelectorAll('.prod').forEach(el => {
+    const k = el.dataset.key, s = STOCK[k], left = el.querySelector('[data-left]');
+    const out = (typeof s === 'number') && s <= 0;
+    if(!out) allOut = false;
+    if(qty[k] > limitOf(k)) qty[k] = limitOf(k);
+    el.classList.toggle('soldout', out);
+    el.querySelector('input').max = limitOf(k);
+    el.querySelectorAll('button').forEach(b => b.disabled = out);
+    left.classList.toggle('low', typeof s === 'number' && s <= 10);
+    left.textContent = out ? '품절' : (typeof s === 'number' && s <= MAX_QTY ? `남은 수량 ${s}박스` : '');
+  });
+  $('soldoutBanner').classList.toggle('show', allOut);
+  $('submitBtn').disabled = allOut;
+  syncProducts();
+}
+async function loadStock(){
+  if(!API_URL) return;
+  try{
+    const r = await fetch(API_URL, { method:'POST', body: JSON.stringify({ action:'stock' }) });
+    const j = await r.json();
+    if(j.ok && j.stock){ STOCK = j.stock; applyStock(); }
+  }catch(e){ /* 조회 실패 시 제한 없이 표시. 주문 시 서버가 다시 확인합니다. */ }
+}
+
+function setQty(key, v, typing){
+  v = Number.isFinite(v) ? Math.max(0, Math.min(limitOf(key), v)) : 0;
+  qty[key] = v;
+  if(!typing) syncProducts(); else updateTotals();
+}
+function syncProducts(){
+  document.querySelectorAll('.prod').forEach(el => {
+    const k = el.dataset.key;
+    el.classList.toggle('on', qty[k] > 0);
+    const inp = el.querySelector('input'); if(document.activeElement !== inp) inp.value = qty[k];
+  });
+  updateTotals();
+}
+const total = () => PRODUCTS.reduce((s,p) => s + p.price * qty[p.key], 0);
+function updateTotals(){
+  const t = won(total());
+  $('totalText').textContent = t; $('dockSum').textContent = t;
+}
+
+/* ---- 전화번호 자동 하이픈 ---- */
+$('phone').addEventListener('input', (e) => {
+  const d = e.target.value.replace(/\D/g,'').slice(0,11);
+  let out = d;
+  if(d.length > 7) out = d.slice(0,3) + '-' + d.slice(3, d.length === 11 ? 7 : 6) + '-' + d.slice(d.length === 11 ? 7 : 6);
+  else if(d.length > 3) out = d.slice(0,3) + '-' + d.slice(3);
+  e.target.value = out;
+});
+
+/* ---- 입금자명은 이름을 따라가다가, 직접 고치면 멈춤 ---- */
+let depEdited = false;
+$('depositor').addEventListener('input', () => { depEdited = true; });
+$('name').addEventListener('input', () => { if(!depEdited) $('depositor').value = $('name').value; });
+
+/* ---- Daum 주소 검색 ---- */
+function openAddr(){
+  if(!(window.daum && window.daum.Postcode)){
+    // 스크립트가 막힌 환경: 직접 입력으로 대체
+    ['zip','address'].forEach(id => $(id).removeAttribute('readonly'));
+    $('zip').placeholder = '우편번호 5자리'; $('address').placeholder = '주소를 직접 입력해 주세요';
+    $('addrHint').textContent = '주소 검색을 불러오지 못했습니다. 우편번호와 주소를 직접 입력해 주세요.';
+    $('address').focus(); return;
+  }
+  const box = $('postcodeBox'); box.innerHTML = '';
+  $('addrModal').classList.add('show'); document.body.style.overflow = 'hidden';
+  new daum.Postcode({
+    width:'100%', height:'100%',
+    oncomplete(data){
+      const base = data.userSelectedType === 'R' ? (data.roadAddress || data.autoRoadAddress) : (data.jibunAddress || data.autoJibunAddress);
+      let extra = '';
+      if(data.userSelectedType === 'R'){
+        if(data.bname && /[동로가]$/.test(data.bname)) extra += data.bname;
+        if(data.buildingName && data.apartment === 'Y') extra += (extra ? ', ' : '') + data.buildingName;
+        if(extra) extra = ' (' + extra + ')';
+      }
+      $('zip').value = data.zonecode;
+      $('address').value = base + extra;
+      closeAddr();
+      $('addressDetail').focus();
+    },
+  }).embed(box);
+}
+function closeAddr(){ $('addrModal').classList.remove('show'); document.body.style.overflow = ''; }
+$('searchAddr').addEventListener('click', openAddr);
+$('zip').addEventListener('click', () => { if($('zip').hasAttribute('readonly')) openAddr(); });
+$('address').addEventListener('click', () => { if($('address').hasAttribute('readonly')) openAddr(); });
+$('closeAddr').addEventListener('click', closeAddr);
+$('addrModal').addEventListener('click', (e) => { if(e.target === $('addrModal')) closeAddr(); });
+document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeAddr(); });
+
+/* ---- 검증 & 제출 ---- */
+function collect(){
+  return {
+    name: $('name').value.trim(),
+    phone: $('phone').value.replace(/\D/g,''),
+    zip: $('zip').value.replace(/\D/g,''),
+    address: $('address').value.trim(),
+    addressDetail: $('addressDetail').value.trim(),
+    depositor: ($('depositor').value.trim() || $('name').value.trim()),
+    memo: $('memo').value.trim(),
+    consent: $('consent').checked,
+    items: Object.assign({}, qty),
+  };
+}
+function check(o){
+  const errs = [];
+  if(PRODUCTS.every(p => !o.items[p.key])) errs.push(['sec-items','상품을 1개 이상 선택해 주세요.']);
+  if(!o.name) errs.push(['name','이름을 입력해 주세요.']);
+  if(!/^01[016789]\d{7,8}$/.test(o.phone)) errs.push(['phone','휴대전화 번호를 확인해 주세요.']);
+  if(!o.zip || !o.address) errs.push(['searchAddr','주소 검색으로 주소를 입력해 주세요.']);
+  if(!o.consent) errs.push(['consent','개인정보 수집·이용에 동의해 주세요.']);
+  return errs;
+}
+function showErr(msg){ const b = $('errBox'); b.textContent = msg; b.classList.toggle('show', !!msg); }
+
+let submitting = false;
+$('orderForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if(submitting) return;
+  const o = collect(); const errs = check(o);
+  if(errs.length){
+    showErr(errs.map(x => '· ' + x[1]).join('\n')); $('errBox').style.whiteSpace = 'pre-line';
+    const t = $(errs[0][0]); t.scrollIntoView({behavior:'smooth', block:'center'}); if(t.focus) t.focus({preventScroll:true});
+    return;
+  }
+  showErr('');
+  submitting = true; $('submitBtn').disabled = true; $('submitBtn').textContent = '접수 중입니다…';
+  try{
+    let res;
+    if(!API_URL){
+      await new Promise(r => setTimeout(r, 500));
+      res = { ok:true, orderNo:'TEST-0001', total: total() };
+    } else {
+      const ctl = new AbortController(); const timer = setTimeout(() => ctl.abort(), 30000);
+      const r = await fetch(API_URL, { method:'POST', body: JSON.stringify(o), signal: ctl.signal });
+      clearTimeout(timer);
+      res = await r.json();
+    }
+    if(res.stock){ STOCK = res.stock; }
+    if(!res.ok){ if(res.stock) applyStock(); const se = new Error(res.error || '주문 접수에 실패했습니다.'); se.server = true; throw se; }
+    showDone(o, res);
+    applyStock();
+  }catch(err){
+    const msg = (err && err.name === 'AbortError') ? '응답이 지연되고 있습니다.' : (err && err.message) || '';
+    if(err && err.server){ showErr(msg); return; }
+    showErr((msg ? msg + ' ' : '') + '다시 시도해도 안 되면 문자주문 ' + CONTACT_PHONE + ' 로 알려 주세요. (같은 주문이 중복 접수되지 않도록 처리됩니다)');
+  }finally{
+    submitting = false; $('submitBtn').textContent = '주문하기';
+    $('submitBtn').disabled = PRODUCTS.every(p => typeof STOCK[p.key] === 'number' && STOCK[p.key] <= 0);
+  }
+});
+
+/* ---- 완료 화면 ---- */
+function showDone(o, res){
+  $('doneNo').textContent = res.orderNo;
+  $('acctNum').textContent = BANK.bank + ' ' + BANK.number;
+  $('acctHolder').textContent = '예금주 ' + BANK.holder;
+  $('doneTotal').textContent = '입금액 ' + won(res.total);
+  $('doneDep').textContent = o.depositor;
+  $('contactPhone').textContent = CONTACT_PHONE;
+  const lines = PRODUCTS.filter(p => o.items[p.key]).map(p => `<dt>${p.name}</dt><dd>${o.items[p.key]}박스</dd>`).join('');
+  $('doneKv').innerHTML = lines + `<dt>받는 분</dt><dd>${esc(o.name)}</dd><dt>배송지</dt><dd>${esc(o.address)} ${esc(o.addressDetail)}</dd>`;
+  $('formView').style.display = 'none'; $('done').style.display = 'block';
+  $('dock').classList.remove('show');
+  window.scrollTo({top: $('order').offsetTop - 10, behavior:'smooth'});
+}
+const esc = (s) => String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+$('copyAcct').addEventListener('click', async () => {
+  const text = BANK.number.replace(/-/g,'');
+  try{ await navigator.clipboard.writeText(text); $('copyAcct').textContent = '복사되었습니다 ✓'; }
+  catch(e){ $('copyAcct').textContent = '직접 길게 눌러 복사해 주세요'; }
+  setTimeout(() => $('copyAcct').textContent = '계좌번호 복사', 2500);
+});
+$('again').addEventListener('click', () => {
+  PRODUCTS.forEach(p => qty[p.key] = 0); syncProducts();
+  $('consent').checked = false; $('memo').value = '';
+  $('done').style.display = 'none'; $('formView').style.display = 'block';
+  window.scrollTo({top: $('order').offsetTop - 10, behavior:'smooth'});
+});
+
+/* ---- 주문 버튼 · 하단 고정 바 ---- */
+function goOrder(){ $('sec-items').scrollIntoView({behavior:'smooth', block:'start'}); }
+$('heroOrder').addEventListener('click', goOrder);
+$('dockBtn').addEventListener('click', goOrder);
+if('IntersectionObserver' in window){
+  let heroVisible = true, formVisible = false;
+  const upd = () => $('dock').classList.toggle('show', !heroVisible && !formVisible && $('formView').style.display !== 'none');
+  new IntersectionObserver(es => { heroVisible = es[0].isIntersecting; upd(); }, {threshold:0}).observe($('heroOrder'));
+  new IntersectionObserver(es => { formVisible = es[0].isIntersecting; upd(); }, {threshold:0.25}).observe($('orderForm'));
+}
+
+/* ---- 하단 사업자 정보 (채워진 경우에만) ---- */
+(function(){
+  const b = BUSINESS, parts = [];
+  if(b.name) parts.push(`<p><b>${esc(b.name)}</b>${b.owner ? ' · 대표 ' + esc(b.owner) : ''}</p>`);
+  if(b.regNo) parts.push(`<p>사업자등록번호 ${esc(b.regNo)}</p>`);
+  if(b.mailOrderNo) parts.push(`<p>통신판매업 신고번호 ${esc(b.mailOrderNo)}</p>`);
+  if(b.address) parts.push(`<p>${esc(b.address)}</p>`);
+  parts.push(`<p>문의 ${esc(CONTACT_PHONE)} (문자)</p>`);
+  $('footer').innerHTML = parts.join('');
+})();
+
+renderProducts(); syncProducts(); loadStock();
+if(!API_URL) $('demoBanner').hidden = false;
+</script>
+</body>
+</html>
