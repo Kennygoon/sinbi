@@ -138,13 +138,23 @@
       </section>
 
       <section class="card" id="sec-info">
-        <h2>2. 받으실 분 정보</h2>
+        <h2>2. 주문자 · 받는 분 정보</h2>
 
-        <label class="f" for="name">이름 <span class="req">*</span></label>
-        <input class="in" id="name" name="name" type="text" autocomplete="name" maxlength="30" placeholder="받으시는 분 성함" required>
+        <label class="f" for="name">주문자 이름 <span class="req">*</span></label>
+        <input class="in" id="name" name="name" type="text" autocomplete="name" maxlength="30" placeholder="주문하시는 분 성함" required>
 
-        <label class="f" for="phone">휴대전화 <span class="req">*</span></label>
+        <label class="f" for="phone">주문자 휴대전화 <span class="req">*</span></label>
         <input class="in" id="phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" maxlength="13" placeholder="010-0000-0000" required>
+
+        <label style="display:flex;gap:8px;align-items:center;font-size:15px;font-weight:700;margin:16px 0 4px;cursor:pointer"><input type="checkbox" id="sameRecv" checked style="width:20px;height:20px;accent-color:var(--orange)"> 받는 분이 주문자와 같음</label>
+        <p class="hint" style="margin-top:0">선물 등 받는 분이 다르면 체크를 해제하고 받는 분 이름과 연락처를 입력해 주세요.</p>
+
+        <label class="f" for="recvName">받는 분 이름 <span class="req">*</span></label>
+        <input class="in" id="recvName" name="recvName" type="text" maxlength="30" placeholder="택배를 받으시는 분 성함" readonly style="background:#f3eee3">
+
+        <label class="f" for="recvPhone">받는 분 연락처 <span class="req">*</span></label>
+        <input class="in" id="recvPhone" name="recvPhone" type="tel" inputmode="numeric" maxlength="13" placeholder="010-0000-0000" readonly style="background:#f3eee3">
+        <p class="hint">택배 기사님이 배송 시 연락할 번호입니다.</p>
 
         <label class="f" for="zip">주소 <span class="req">*</span></label>
         <div class="row">
@@ -342,12 +352,25 @@ function updateTotals(){
 }
 
 /* ---- 전화번호 자동 하이픈 ---- */
-$('phone').addEventListener('input', (e) => {
-  const d = e.target.value.replace(/\D/g,'').slice(0,11);
+function hyphenate(el){
+  const d = el.value.replace(/\D/g,'').slice(0,11);
   let out = d;
   if(d.length > 7) out = d.slice(0,3) + '-' + d.slice(3, d.length === 11 ? 7 : 6) + '-' + d.slice(d.length === 11 ? 7 : 6);
   else if(d.length > 3) out = d.slice(0,3) + '-' + d.slice(3);
-  e.target.value = out;
+  el.value = out;
+}
+function syncRecv(){
+  if(!$('sameRecv').checked) return;
+  $('recvPhone').value = $('phone').value; $('recvName').value = $('name').value;
+}
+$('phone').addEventListener('input', (e) => { hyphenate(e.target); syncRecv(); });
+$('name').addEventListener('input', syncRecv);
+$('recvPhone').addEventListener('input', (e) => hyphenate(e.target));
+$('sameRecv').addEventListener('change', () => {
+  const same = $('sameRecv').checked;
+  [$('recvName'), $('recvPhone')].forEach(el => { el.readOnly = same; el.style.background = same ? '#f3eee3' : ''; });
+  if(same) syncRecv();
+  else { $('recvName').value = ''; $('recvPhone').value = ''; $('recvName').focus(); }
 });
 
 /* ---- 입금자명은 이름을 따라가다가, 직접 고치면 멈춤 ---- */
@@ -396,6 +419,8 @@ function collect(){
   return {
     name: $('name').value.trim(),
     phone: $('phone').value.replace(/\D/g,''),
+    recvName: ($('sameRecv').checked ? $('name').value : $('recvName').value).trim(),
+    recvPhone: ($('sameRecv').checked ? $('phone').value : $('recvPhone').value).replace(/\D/g,''),
     zip: $('zip').value.replace(/\D/g,''),
     address: $('address').value.trim(),
     addressDetail: $('addressDetail').value.trim(),
@@ -410,6 +435,8 @@ function check(o){
   if(PRODUCTS.every(p => !o.items[p.key])) errs.push(['sec-items','상품을 1개 이상 선택해 주세요.']);
   if(!o.name) errs.push(['name','이름을 입력해 주세요.']);
   if(!/^01[016789]\d{7,8}$/.test(o.phone)) errs.push(['phone','휴대전화 번호를 확인해 주세요.']);
+  if(!o.recvName) errs.push(['recvName','받는 분 이름을 입력해 주세요.']);
+  if(!/^01[016789]\d{7,8}$/.test(o.recvPhone)) errs.push(['recvPhone','받는 분 연락처를 확인해 주세요.']);
   if(!o.zip || !o.address) errs.push(['searchAddr','주소 검색으로 주소를 입력해 주세요.']);
   if(!o.consent) errs.push(['consent','개인정보 수집·이용에 동의해 주세요.']);
   return errs;
