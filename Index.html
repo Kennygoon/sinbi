@@ -634,7 +634,7 @@ $('lookupForm').addEventListener('submit', async (e) => {
       const st = o.shipped ? `<span class="pill ship">발송 완료${o.shippedAt ? ' · ' + esc(o.shippedAt) : ''}</span>` : `<span class="pill wait">발송 준비 중</span>`;
       const items = o.items.map(i => `${esc(i.name)} ${i.qty}박스`).join(' · ');
       return `<div class="oitem"><div class="h"><span>${esc(o.recvName)} 님께${o.multi ? ' <small>(복수주문)</small>' : ''}</span><span>${won(o.total)}</span></div>` +
-        `<div style="margin:4px 0">${st}</div><div class="s">${items}</div><div class="s">받는 분 연락처 ${esc(o.recvPhone)}</div>` +
+        `<div style="margin:4px 0">${st}</div><div class="s">${items}</div><div class="s">받는 분 연락처 ${esc(o.recvPhone)}</div><div class="s">주소 ${esc(o.address)}</div>` +
         (o.tracking ? `<div class="s">송장번호 <b>${esc(o.tracking)}</b></div>` : '') +
         `<div class="s">접수 ${esc(o.at)} · 주문번호 ${esc(o.orderNo)}</div></div>`;
     }).join('');
