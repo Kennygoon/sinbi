@@ -36,6 +36,9 @@
   .btn.block{width:100%}
   .btn.ghost{background:#fff;color:var(--orange-d);border:2px solid var(--orange);box-shadow:none;font-size:16px;min-height:48px;padding:0 18px}
   .btn.ghost:hover{background:#fff4e8}
+  .more{background:linear-gradient(180deg,#fff4e0,#ffe9c7);border:2px dashed var(--orange);border-radius:16px;padding:16px;margin:14px 0;text-align:center}
+  .more b{display:block;font-size:17px;margin-bottom:2px}
+  .more p{margin:0 0 12px;font-size:14px;color:var(--muted)}
 
   section.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px 18px;margin:0 0 16px}
   h2{margin:0 0 4px;font-size:20px;font-weight:900}
@@ -224,6 +227,11 @@
         <div style="margin-top:10px;font-size:22px;font-weight:900;color:var(--red)" id="doneTotal"></div>
         <button class="btn ghost" type="button" id="copyAcct" style="margin-top:12px">계좌번호 복사</button>
       </div>
+      <div class="more">
+        <b>🍊 더 주문하실 건가요?</b>
+        <p>다른 분께 보내는 선물 등 받는 분이 다르면 이어서 추가 주문할 수 있어요.</p>
+        <button class="btn block" type="button" id="again">+ 추가 주문하기</button>
+      </div>
       <dl class="kv" id="doneKv"></dl>
       <div class="notice">
         <b>꼭 확인해 주세요</b>
@@ -233,7 +241,7 @@
           <li>문의는 문자로 <span id="contactPhone"></span> 로 주세요.</li>
         </ul>
       </div>
-      <div style="margin-top:16px"><button class="btn ghost block" type="button" id="again">추가 주문하기</button></div>
+      <div style="margin-top:16px"><button class="btn block" type="button" id="again2">+ 추가 주문하기</button></div>
     </section>
   </div>
 </main>
@@ -509,12 +517,14 @@ $('copyAcct').addEventListener('click', async () => {
   catch(e){ $('copyAcct').textContent = '직접 길게 눌러 복사해 주세요'; }
   setTimeout(() => $('copyAcct').textContent = '계좌번호 복사', 2500);
 });
-$('again').addEventListener('click', () => {
+const again = () => {
   PRODUCTS.forEach(p => qty[p.key] = 0); syncProducts();
   $('consent').checked = false; $('memo').value = '';
   $('done').style.display = 'none'; $('formView').style.display = 'block';
-  window.scrollTo({top: $('order').offsetTop - 10, behavior:'smooth'});
-});
+  $('sec-items').scrollIntoView({behavior:'smooth', block:'start'});
+};
+$('again').addEventListener('click', again);
+$('again2').addEventListener('click', again);
 
 /* ---- 주문 버튼 · 하단 고정 바 ---- */
 function goOrder(){ $('sec-items').scrollIntoView({behavior:'smooth', block:'start'}); }
