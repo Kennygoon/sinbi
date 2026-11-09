@@ -55,6 +55,7 @@
 
   .prod{display:grid;grid-template-columns:1fr auto;gap:10px 12px;align-items:center;border:1.5px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px;background:#fff}
   .prod.on{border-color:var(--orange);background:#fff8ef}
+  .prod .pimg{grid-column:1/-1;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;border-radius:10px;display:block;background:#f3ede0}
   .prod .name{font-weight:900;font-size:17px}
   .prod .name small{display:block;font-weight:500;color:var(--muted);font-size:13px;margin-top:2px}
   .tag{display:inline-block;font-size:12px;font-weight:700;color:var(--orange-d);background:#ffeacf;border-radius:999px;padding:1px 8px;margin-left:6px;vertical-align:1px}
@@ -321,6 +322,7 @@ const qty = {}; PRODUCTS.forEach(p => qty[p.key] = 0);
 function renderProducts(){
   $('prodList').innerHTML = PRODUCTS.map(p => `
     <div class="prod" data-key="${p.key}">
+      <img class="pimg" src="prod-${p.key}.jpg" alt="${p.name} ${p.desc} 실제 포장 사진" width="800" height="600" loading="lazy">
       <div>
         <div class="name">${p.name}${p.tag ? `<span class="tag">${p.tag}</span>` : ''}<small>${p.desc}</small></div>
         <div class="price">${won(p.price)}<small>${p.ship}</small></div>
