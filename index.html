@@ -36,6 +36,12 @@
   .btn.block{width:100%}
   .btn.ghost{background:#fff;color:var(--orange-d);border:2px solid var(--orange);box-shadow:none;font-size:16px;min-height:48px;padding:0 18px}
   .btn.ghost:hover{background:#fff4e8}
+  .warnbar{background:#fff1f0;border:1.5px solid #f0b4ad;color:#b3261e;border-radius:12px;padding:10px 12px;font-size:15px;text-align:center;margin:4px 0 10px}
+  .finwrap{position:sticky;bottom:10px;z-index:20;padding:6px 0;background:linear-gradient(to top,rgba(255,250,240,.96) 70%,rgba(255,250,240,0))}
+  #finish{background:#2e7d32;min-height:78px;font-size:24px;border-radius:18px;box-shadow:0 8px 22px rgba(46,125,50,.38);animation:pulseFin 1.6s ease-in-out infinite}
+  #finish:disabled{animation:none;opacity:.7}
+  @keyframes pulseFin{0%,100%{transform:scale(1)}50%{transform:scale(1.025)}}
+  @media (prefers-reduced-motion:reduce){#finish{animation:none}}
   .more{background:linear-gradient(180deg,#fff4e0,#ffe9c7);border:2px dashed var(--orange);border-radius:16px;padding:16px;margin:14px 0;text-align:center}
   .more b{display:block;font-size:17px;margin-bottom:2px}
   .oitem .h button{border:0;background:none;color:var(--red);font-weight:800;font-size:13px;cursor:pointer;padding:2px 0 2px 10px}
@@ -247,14 +253,15 @@
       <div class="gtotal"><span id="gCount"></span><b id="gSum"></b></div>
 
       <div id="stepMore">
+        <div class="warnbar">⚠ 아직 접수되지 않았습니다. 아래 <b>‘주문 완료’</b>를 꼭 눌러 주세요.</div>
+        <div class="err" id="errBox2" role="alert"></div>
+        <div class="finwrap"><button class="btn block" type="button" id="finish">주문 완료 · 입금 안내 받기</button></div>
+        <p class="hint" style="text-align:center"><b>‘주문 완료’를 눌러야 주문이 접수됩니다.</b><br>누르면 합계 금액과 입금 계좌가 나옵니다.</p>
         <div class="more">
           <b>🍊 더 주문하실 건가요?</b>
           <p>선물 등 받는 분이 다르면 이어서 추가 주문하세요. 입금은 모아서 한 번에 하실 수 있어요.</p>
-          <button class="btn block" type="button" id="again">+ 추가 주문하기</button>
+          <button class="btn block ghost" type="button" id="again">+ 추가 주문하기</button>
         </div>
-        <div class="err" id="errBox2" role="alert"></div>
-        <button class="btn block" type="button" id="finish" style="background:#2e7d32;box-shadow:0 6px 16px rgba(46,125,50,.28)">주문 완료 · 입금 안내 받기</button>
-        <p class="hint" style="text-align:center"><b>‘주문 완료’를 눌러야 주문이 접수됩니다.</b><br>누르면 합계 금액과 입금 계좌가 나옵니다.</p>
       </div>
 
       <div id="stepPay" hidden>
@@ -502,12 +509,29 @@ $('orderForm').addEventListener('submit', (e) => {
   const over = PRODUCTS.filter(p => typeof STOCK[p.key] === 'number' && (CART.reduce((s, x) => s + (x.o.items[p.key] || 0), 0) + (o.items[p.key] || 0)) > STOCK[p.key]);
   if(over.length){ showErr('재고가 부족합니다: ' + over.map(p => p.name + ' 남은 수량 ' + STOCK[p.key] + '박스').join(', ') + ' (이미 담은 수량 포함)'); return; }
   showErr('');
+  if(isDuplicate(o)){
+    if(!confirm('같은 받는 분·주소·상품의 주문이 이미 있습니다.\n중복 주문일 수 있어요.\n\n그래도 주문하시겠습니까?')) return;
+    o.allowDup = true;      // 서버의 중복 방지(10분 이내 동일 주문)를 이번 한 번만 건너뜀
+  }
   CART.push({ o, total: total() });
   renderDone('cart');
   $('formView').style.display = 'none'; $('done').style.display = 'block';
   $('dock').classList.remove('show');
   window.scrollTo({top: $('order').offsetTop - 10, behavior:'smooth'});
 });
+
+/* ---- 중복 주문 확인: 담은 내역·이번 접속에서 접수한 주문·최근 1일 내 이 기기에서 접수한 주문과 비교 ---- */
+const orderSig = (o) => [o.recvName, o.recvPhone, o.address, o.addressDetail,
+  PRODUCTS.map(p => p.key + ':' + (o.items[p.key] || 0)).join(',')].map(v => String(v).replace(/\s+/g, '')).join('|');
+const SIG_KEY = 'sinbi_sigs';
+function readSigs(){ try{ const a = JSON.parse(localStorage.getItem(SIG_KEY) || '[]'); const lim = Date.now() - 86400000; return a.filter(x => x && x.t > lim); }catch(e){ return []; } }
+function saveSigs(list){ try{ const a = readSigs().concat(list.map(x => ({ s: orderSig(x.o), t: Date.now() }))).slice(-50); localStorage.setItem(SIG_KEY, JSON.stringify(a)); }catch(e){} }
+function isDuplicate(o){
+  const sg = orderSig(o);
+  return CART.some(x => orderSig(x.o) === sg) || (PAID || []).some(x => orderSig(x.o) === sg) || readSigs().some(x => x.s === sg);
+}
+// 주문 완료를 누르기 전에 창을 닫거나 새로고침하면 접수되지 않으므로 한 번 더 알려줌
+window.addEventListener('beforeunload', (e) => { if(CART.length && !submitting){ e.preventDefault(); e.returnValue = ''; } });
 
 /* ---- 주문 내역 / 완료 화면 ---- */
 function renderDone(mode){                 // mode: 'cart'(접수 전) | 'pay'(접수 완료, 입금 안내)
@@ -578,10 +602,12 @@ $('finish').addEventListener('click', async () => {
     if(res.stock){ STOCK = res.stock; applyStock(); }
     if(!res.ok){ const se = new Error(res.error || '주문 접수에 실패했습니다.'); se.server = true; throw se; }
     PAID = CART.map((x, i) => Object.assign({}, x, { orderNo: res.orders[i].orderNo, total: res.orders[i].total }));
+    saveSigs(PAID);
     CART = [];
     renderDone('pay');
     window.scrollTo({top: $('order').offsetTop - 10, behavior:'smooth'});
   }catch(err){
+    CART.forEach(x => { x.o.allowDup = false; });   // 재시도 때는 중복 방지를 다시 켜서 이중 접수를 막음
     const msg = (err && err.name === 'AbortError') ? '응답이 지연되고 있습니다.' : (err && err.message) || '';
     eb.textContent = err && err.server ? msg : ((msg ? msg + ' ' : '') + '잠시 후 ‘주문 완료’를 다시 눌러 주세요. 안 되면 문자주문 ' + CONTACT_PHONE + ' 로 알려 주세요. (같은 주문이 중복 접수되지 않도록 처리됩니다)');
     eb.classList.add('show');
