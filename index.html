@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>귀농 후 첫 수확 산지직송 단감 주문</title>
-<meta name="description" content="노령산맥 산지직송 단감. 특품 5kg, 상품 10kg, 보통 10kg 주문 · 입금 순서대로 배송">
-<meta property="og:title" content="귀농 후 첫 수확 산지직송 단감">
+<title>귀농 후 첫 수확 산지직송 단감·대봉감 주문</title>
+<meta name="description" content="노령산맥 산지직송 단감·대봉감. 대봉감 11.5kg, 단감 특품 5kg·상품 10kg·보통 10kg 주문 · 입금 순서대로 배송">
+<meta property="og:title" content="귀농 후 첫 수확 산지직송 단감·대봉감">
 <meta property="og:description" content="노령산맥의 맑은 바람과 큰 일교차로 키운 단감, 온라인 주문">
 <meta property="og:image" content="hero.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -69,6 +69,7 @@
   .price small{display:block;font-weight:500;color:var(--muted);font-size:12.5px}
   .left{font-size:13px;font-weight:700;color:var(--orange-d);margin-top:4px;min-height:1px}
   .left.low{color:var(--red)}
+  .prod[hidden]{display:none}
   .prod.soldout{opacity:.55;background:#f3ede0}
   .prod.soldout .left{color:#6b5a45}
   .soldout-banner{display:none;margin:0 0 14px;background:#fdecea;border:1px solid #f3b8b3;color:#8c1d18;border-radius:12px;padding:12px 14px;font-weight:700;font-size:14px}
@@ -311,6 +312,8 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbxxqVAMqSJ-gJ_WL8ZMAB6y
 
 // 상품·가격은 Code.gs 의 PRODUCTS 와 반드시 같아야 합니다 (서버가 이 가격으로 다시 계산합니다).
 const PRODUCTS = [
+  { key:'dbdm',    name:'대봉감 대+중 혼과 11.5kg', tag:'', desc:'대과·중과 혼합 · 11.5kg', price:35000, ship:'택배비 포함' },
+  { key:'dbso',    name:'대봉감 소 11.5kg',         tag:'', desc:'소과 · 11.5kg',           price:29000, ship:'택배비 포함' },
   { key:'special', name:'특품 5kg', tag:'강추상품', desc:'특과 16~18과 · 팬캡 포장', price:38000, ship:'택배비 4,000원 포함' },
   { key:'grade',   name:'상품 10kg', tag:'', desc:'중과 58~60과 · 3단 포장',  price:34000, ship:'택배비 5,000원 포함' },
   { key:'normal',  name:'보통 10kg', tag:'', desc:'소과 · 막 포장',            price:19000, ship:'택배비 5,000원 포함' },
@@ -363,6 +366,7 @@ function applyStock(){
     const out = (typeof s === 'number') && s <= 0;
     if(!out) allOut = false;
     if(qty[k] > limitOf(k)) qty[k] = limitOf(k);
+    el.hidden = out;                       // 재고 0 상품은 상품 선택에서 아예 보이지 않게 함
     el.classList.toggle('soldout', out);
     el.querySelector('input').max = limitOf(k);
     el.querySelectorAll('button').forEach(b => b.disabled = out);
